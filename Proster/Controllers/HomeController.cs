@@ -14,8 +14,24 @@ namespace Proster.Controllers
             ViewBag.UserNames = new SelectListItem[] { 
                             new SelectListItem(){Text="Elias",Value="e"},
                             new SelectListItem(){Text="Jonte",Value="j"}
-            };            
-            
+            };
+
+            ViewBag.TestSets = new SelectListItem[] {
+                            new SelectListItem(){Text="Set1",Value="0"},
+                            new SelectListItem(){Text="Set2",Value="1"}
+            };
+
+            ViewBag.Processes = new SelectListItem[] {
+                            new SelectListItem(){Text="RCA",Value="0"},
+                            new SelectListItem(){Text="Case Complexity",Value="1"}
+            };
+
+
+            return View();
+        }
+
+        public ActionResult Case()
+        {
             return View();
         }
     }
