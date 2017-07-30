@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Proster.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,20 +11,11 @@ namespace Proster.Controllers
     {
         public ActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
+            ViewBag.UserNames = new SelectListItem[] { 
+                            new SelectListItem(){Text="Elias",Value="e"},
+                            new SelectListItem(){Text="Jonte",Value="j"}
+            };            
+            
             return View();
         }
     }
