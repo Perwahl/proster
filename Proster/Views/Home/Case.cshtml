@@ -3,6 +3,27 @@
     ViewBag.Title = "Case";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="row">
+    <div class="col-md-4">
+        <h2>Product</h2>
+        <div>
+            @Html.ListBox("Product")
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h2>Component</h2>
+        @Html.ListBox("Component")
+    </div>
+    <div class="col-md-4">
+        <h2>Cause</h2>
+        @Html.ListBox("Cause")
+    </div>
+</div>
 
-<h2>Case</h2>
+<div class="row">
+    <iframe src="https://eu1.salesforce.com/500D000001UqQy5"></iframe>
+    
+</div>
+
+
 
