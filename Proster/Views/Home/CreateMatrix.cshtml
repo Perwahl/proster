@@ -50,7 +50,7 @@
     });
 
     $(function () {
-        //get component list on changing of product dropdown list
+        //get area list on changing of component dropdown list
         $('#component_ID').change(function () {
             var id = $("#component_ID :selected").val();
             if (id != "") {
@@ -83,22 +83,45 @@
         });
     });
 
-    @*function AddProduct()
-    {
-        var product = document.getElementById("newProduct").value;
-        if (product != "") {
-            $.ajax({
-                type: "POST",
-                contentType: "application/json; charset=utf-8",
-                url: '@Url.Action("AddProduct", "Home")',
-                data: { "mComponent": id },
-                dataType: "json",
-                beforeSend: function () {
-                    //alert(id);
-                },
+    function AddValue() {
+        var e = window.event;
 
-            }
-                    }*@
+        var inputId = $(window.event.srcElement).attr('dataInputId');
+        var product = document.getElementById(inputId).value;
+
+        if (product != "") {
+                $.ajax({
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    url: '@Url.Action("AddValue", "Home")',
+                    data: { "type": 0, "Value": product },
+                    dataType: "json",
+                    beforeSend: function () {
+                      //  alert(product);
+                    },
+                    success: function (data) {
+                        RefreshListBox(data, inputId);
+                    },
+                    error: function (result) {
+                        alert('Service call failed: ' + result.status + ' Type :' + result.statusText);
+                    }
+                });
+        }
+        else {
+            alert('no input bnad dogk');
+        }
+    }
+
+    function RefreshListBox(data, inputID) {
+        var items = "";
+        $.each(data, function (i, cause) {
+            items += "<option value='" + cause.Value + "'>" + cause.Text + "</option>";
+        });
+        // Fill Component Dropdown list
+        $('#' + inputID + "_ID").html(items);
+
+    }
+
 </script>
 
 <h2>Create RCA Matrix</h2>
@@ -111,21 +134,22 @@
                 <p>
                     @Html.LabelFor(m => m.product)
                     <br />
-                    <input type="text" value="new product" name="newProduct">
-                    <input type="button" value="Add Product" onclick="AddProduct()">>
+                    <input type="text" placeholder="new product" id="product">
+                    <input type="button" value="Add Product" dataInputId="product" onclick="AddValue()">
                     <br />
                     @Html.ListBoxFor(m => m.product.ID, new SelectList(ViewBag.Product, "ID", "Name", ViewBag.SelProduct), new { style = "width:310px" })
                     @Html.ValidationMessageFor(m => m.product.ID)
                     <br />
                     <input type="button" value="Remove Product">
-
-
                 </p>
             </li>
             <li>
                 <p>
                     @Html.LabelFor(m => m.component)
                     <br />
+                    <input type="text" placeholder="new product" id="component">
+                    <input type="button" value="Add Component" dataInputId="component" onclick="AddValue()">
+                    <br />    
                     @Html.ListBoxFor(m => m.component.ID, new SelectList(ViewBag.Component, "ID", "Name", ViewBag.SelComponent), new { style = "width:310px" })
                     @Html.ValidationMessageFor(m => m.component.ID)
                 </p>

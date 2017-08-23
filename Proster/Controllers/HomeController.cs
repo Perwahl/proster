@@ -10,6 +10,9 @@ namespace Proster.Controllers
 {
     public class HomeController : Controller
     {
+        List<Product> lstProduct = new List<Product>();
+        List<Component> lstComponent = new List<Component>();
+
         public ActionResult Index()
         {
             ViewBag.UserNames = new SelectListItem[] {
@@ -50,13 +53,7 @@ namespace Proster.Controllers
 
         #region Private Methods
         void BindProduct()
-        {
-            List<Product> lstProduct = new List<Product>
-            {
-                new Product { ID = null, Name = "Select" },
-                new Product { ID = 1, Name = "Qlik Sense" },
-                new Product { ID = 2, Name = "QlikView" }
-            };
+        {            
             ViewBag.Product = lstProduct;
         }
         //for server side
@@ -204,6 +201,13 @@ namespace Proster.Controllers
             {
             }
             return Json(null);
+        }
+
+        public JsonResult AddValue(int type, string value)
+        {
+            lstProduct.Add(new Product { ID = null, Name = value });                       
+
+            return Json(new SelectList(lstProduct.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult CreateMatrix()
