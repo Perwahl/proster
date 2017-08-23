@@ -129,7 +129,7 @@ namespace Proster.Controllers
                 else
                 {
                     List<Cause> Cause = new List<Cause> {
-new Cause { ID = null, Name = "Select" } };
+                        new Cause { ID = null, Name = "Select" } };
                     ViewBag.Cause = Cause;
                 }
             }
