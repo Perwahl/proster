@@ -20,7 +20,7 @@ namespace Proster.Models
         [Display(Name = "Component")]
         public Component component { get; set; }
         [Display(Name = "Cause")]
-        public Cause cause { get; set; }
+        public Area cause { get; set; }
 
     }
 
@@ -56,15 +56,15 @@ namespace Proster.Models
         [MustBeSelectedAttribute(ErrorMessage = "Please Select Component")]
         public int? ID { get; set; }
         public string Name { get; set; }
-        public int? Product { get; set; }
+        public int? ParentProduct { get; set; }
     }
 
-    public class Cause
+    public class Area
     {
         [MustBeSelectedAttribute(ErrorMessage = "Please Select Cause")]
         public int? ID { get; set; }
         public string Name { get; set; }
-        public int? Component { get; set; }
+        public int? ParentComponent { get; set; }
     }
 }
 

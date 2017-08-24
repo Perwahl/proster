@@ -5,13 +5,20 @@ using System.Web;
 using System.Web.Mvc;
 using Proster.Models;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Web.Script.Serialization;
 
 namespace Proster.Controllers
 {
     public class HomeController : Controller
     {
-        List<Product> lstProduct = new List<Product>();
-        List<Component> lstComponent = new List<Component>();
+       // public List<Product> lstProduct new List<Compo>();;
+        public List<Component> lstComponent = new List<Component>();
+        public List<Area> lstArea = new List<Area>();
+
+        public static String ProductJsonPath = AppDomain.CurrentDomain.BaseDirectory + @"\Data\Products.json" ;
+        public static String ComponentJsonPath = AppDomain.CurrentDomain.BaseDirectory + @"\Data\Components.json";
+        public static String AreaJsonPath = AppDomain.CurrentDomain.BaseDirectory + @"\Data\Areas.json";
 
         public ActionResult Index()
         {
@@ -52,10 +59,41 @@ namespace Proster.Controllers
         }
 
         #region Private Methods
+
         void BindProduct()
-        {            
+        {
+            List<Product> lstProduct = GetProducts();
+
             ViewBag.Product = lstProduct;
         }
+
+        private static List<Product> GetProducts()
+        {
+            var lstProduct = new List<Product>();
+            var text = System.IO.File.ReadAllText(ProductJsonPath);
+            var serializer = new JavaScriptSerializer();
+            lstProduct = serializer.Deserialize<List<Product>>(text);
+            return lstProduct;
+        }
+
+        private static List<Component> GetComponents()
+        {
+            var lstComponent = new List<Component>();
+            var text = System.IO.File.ReadAllText(ComponentJsonPath);
+            var serializer = new JavaScriptSerializer();
+            lstComponent = serializer.Deserialize<List<Component>>(text);
+            return lstComponent;
+        }
+
+        private static List<Area> GetAreas()
+        {
+            var lstArea = new List<Area>();
+            var text = System.IO.File.ReadAllText(AreaJsonPath);
+            var serializer = new JavaScriptSerializer();
+            lstArea = serializer.Deserialize<List<Area>>(text);
+            return lstArea;
+        }
+
         //for server side
         void BindComponent(int? mProduct)
         {
@@ -63,23 +101,9 @@ namespace Proster.Controllers
             {
                 if (mProduct != 0)
                 {
-                    //below code is only for demo, you can pick city from database
-                    int index = 1;
-                    List<Component> lstComponent = new List<Component>
-                    {
-                        new Component { Product = 0, ID=null, Name = "Select" },
-                        new Component { Product = 1, ID=index++, Name = "Engine" },
-                        new Component { Product = 1, ID=index++, Name = "Proxy" },
-                        new Component { Product = 1, ID=index++, Name = "Repository" },
-                        new Component { Product = 1, ID=index++, Name = "Application" },
-                        new Component { Product = 1, ID=index++, Name = "Data Load Script" },
-                        new Component { Product = 2, ID=index++, Name = "Application" },
-                        new Component { Product = 2, ID=index++, Name = "Data Load Script" },
-                        new Component { Product = 2, ID=index++, Name = "QlikView Server Service" },
-                        new Component { Product = 2, ID=index++, Name = "QlikView Webserver" },
-                    };
+                    var lstComponent = GetComponents();
                     var component = from c in lstComponent
-                                    where c.Product == mProduct || c.Product == 0
+                                    where c.ParentProduct == mProduct || c.ParentProduct == 0
                                     select c;
                     ViewBag.Component = component;
                 }
@@ -87,7 +111,7 @@ namespace Proster.Controllers
                 {
                     List<Component> Component = new List<Component>
                     {
-                       new Component { ID = null, Name = "Select" }
+                       new Component {Name = "Select" }
                     };
                     ViewBag.Component = Component;
                 }
@@ -97,36 +121,22 @@ namespace Proster.Controllers
             }
         }
 
-        void BindCause(int? mComponent)
+        void BindArea(int? mComponent)
         {
             try
             {
                 if (mComponent != 0)
                 {
-                    //below code is only for demo, you can pick city from database
-                    int index = 1;
-                    List<Cause> lstCause = new List<Cause>
-                    {
-                        new Cause { Component = 0, ID=null, Name = "Select" },
-                        new Cause { Component = 1, ID=index++, Name = "Port Issue" },
-                        new Cause { Component = 1, ID=index++, Name = "Certificate Issue" },
-                        new Cause { Component = 1, ID=index++, Name = "Product Defect" },
-                        new Cause { Component = 1, ID=index++, Name = "Product Defect" },
-                        new Cause { Component = 1, ID=index++, Name = "Other" },
-                        new Cause { Component = 2, ID=index++, Name = "Port Issue" },
-                        new Cause { Component = 2, ID=index++, Name = "Expression Issue" },
-                        new Cause { Component = 2, ID=index++, Name = "Product Defect" },
-                        new Cause { Component = 2, ID=index++, Name = "Other" },
-                    };
+                    var lstCause = GetAreas();
                     var cause = from c in lstCause
-                                where c.Component == mComponent || c.Component == 0
+                                where c.ParentComponent == mComponent || c.ParentComponent == 0
                                 select c;
                     ViewBag.Cause = cause;
                 }
                 else
                 {
-                    List<Cause> Cause = new List<Cause> {
-                        new Cause { ID = null, Name = "Select" } };
+                    List<Area> Cause = new List<Area> {
+                        new Area { Name = "Select" } };
                     ViewBag.Cause = Cause;
                 }
             }
@@ -142,24 +152,11 @@ namespace Proster.Controllers
             try
             {
                 if (mProduct != 0)
-                {
-                    //below code is only for demo, you can pick city from database
-                    int index = 1;
-                    List<Component> lstComponent = new List<Component>
-                    {
-                        new Component { Product = 0, ID=null, Name = "Select" },
-                        new Component { Product = 1, ID=index++, Name = "Engine" },
-                        new Component { Product = 1, ID=index++, Name = "Proxy" },
-                        new Component { Product = 1, ID=index++, Name = "Repository" },
-                        new Component { Product = 1, ID=index++, Name = "Application" },
-                        new Component { Product = 1, ID=index++, Name = "Data Load Script" },
-                        new Component { Product = 2, ID=index++, Name = "Application" },
-                        new Component { Product = 2, ID=index++, Name = "Data Load Script" },
-                        new Component { Product = 2, ID=index++, Name = "QlikView Server Service" },
-                        new Component { Product = 2, ID=index++, Name = "QlikView Webserver" },
-                    };
+                {                  
+                    List<Component> lstComponent = GetComponents();
+                
                     var component = from c in lstComponent
-                                    where c.Product == mProduct || c.Product == 0
+                                    where c.ParentProduct == mProduct || c.ParentProduct == 0
                                     select c;
                     return Json(new SelectList(component.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
                 }
@@ -170,29 +167,15 @@ namespace Proster.Controllers
             return Json(null);
         }
 
-        public JsonResult CauseList(int mComponent)
+        public JsonResult AreaList(int mComponent)
         {
             try
             {
                 if (mComponent != 0)
-                {
-                    //below code is only for demo, you can pick city from database
-                    int index = 1;
-                    List<Cause> lstCause = new List<Cause>
-                    {
-                        new Cause { Component = 0, ID=null, Name = "Select" },
-                        new Cause { Component = 1, ID=index++, Name = "Port Issue" },
-                        new Cause { Component = 1, ID=index++, Name = "Certificate Issue" },
-                        new Cause { Component = 1, ID=index++, Name = "Product Defect" },
-                        new Cause { Component = 1, ID=index++, Name = "Product Defect" },
-                        new Cause { Component = 1, ID=index++, Name = "Other" },
-                        new Cause { Component = 2, ID=index++, Name = "Port Issue" },
-                        new Cause { Component = 2, ID=index++, Name = "Expression Issue" },
-                        new Cause { Component = 2, ID=index++, Name = "Product Defect" },
-                        new Cause { Component = 2, ID=index++, Name = "Other" },
-                    };
+                {         
+                    List<Area> lstCause = GetAreas();
                     var cause = from c in lstCause
-                                    where c.Component == mComponent || c.Component == 0
+                                    where c.ParentComponent == mComponent || c.ParentComponent == 0
                                     select c;
                     return Json(new SelectList(cause.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
                 }
@@ -203,18 +186,84 @@ namespace Proster.Controllers
             return Json(null);
         }
 
-        public JsonResult AddValue(int type, string value)
-        {
-            lstProduct.Add(new Product { ID = null, Name = value });                       
+        public JsonResult AddValue(string type, string value, int parentID)
+        {            
+            if (type == "product")
+            {
+                var lstProduct = GetProducts();
+                lstProduct.Add(new Product { Name = value, ID =lstProduct[lstProduct.Count()-1].ID + 1, });
+                SaveList(lstProduct);
+                return Json(new SelectList(lstProduct.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
+            }
+            else if(type == "component")
+            {
+                var lstComponent = GetComponents();
+                lstComponent.Add(new Component { Name = value, ID = lstComponent[lstComponent.Count()-1].ID+1, ParentProduct = parentID });
+                SaveList(lstComponent);
+                //  return Json(new SelectList(lstComponent.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
+                return ComponentList(parentID);
+            }
+            else if (type == "area")
+            {
+                var lstArea = GetAreas();
+                lstArea.Add(new Area { Name = value, ID = lstArea[lstArea.Count() - 1].ID + 1, ParentComponent = parentID });
+                SaveList(lstArea);
+                // return Json(new SelectList(lstArea.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
+                return AreaList(parentID);
+            }
+            else
+            {
+                return Json(null);
+            }            
+        }
 
-            return Json(new SelectList(lstProduct.ToArray(), "ID", "Name"), JsonRequestBehavior.AllowGet);
+        internal void SaveList(List<Product> products)
+        {
+            var a = ProductJsonPath;
+            if (!System.IO.File.Exists(ProductJsonPath))
+            {               
+                return;
+            }
+                      
+            var serializer = new JavaScriptSerializer();
+            var serializedResult = serializer.Serialize(products);
+            
+            System.IO.File.WriteAllText(ProductJsonPath, serializedResult);
+        }
+
+        internal void SaveList(List<Component> components)
+        {
+            var a = ComponentJsonPath;
+            if (!System.IO.File.Exists(ComponentJsonPath))
+            {
+                return;
+            }
+
+            var serializer = new JavaScriptSerializer();
+            var serializedResult = serializer.Serialize(components);
+
+            System.IO.File.WriteAllText(ComponentJsonPath, serializedResult);
+        }
+
+        internal void SaveList(List<Area> areas)
+        {
+            var a = AreaJsonPath;
+            if (!System.IO.File.Exists(AreaJsonPath))
+            {
+                return;
+            }
+
+            var serializer = new JavaScriptSerializer();
+            var serializedResult = serializer.Serialize(areas);
+
+            System.IO.File.WriteAllText(AreaJsonPath, serializedResult);
         }
 
         public ActionResult CreateMatrix()
         {
             BindProduct();
             BindComponent(0);
-            BindCause(0);
+            BindArea(0);
             return View();
         }
         [HttpPost]

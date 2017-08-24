@@ -86,21 +86,28 @@
     function AddValue() {
         var e = window.event;
 
-        var inputId = $(window.event.srcElement).attr('dataInputId');
-        var product = document.getElementById(inputId).value;
+        var inputID = $(window.event.srcElement).attr('dataInputId');
+        var value = document.getElementById(inputID).value;
+        var parentID = "0";
 
-        if (product != "") {
+        if (inputID == "component") {
+            
+            parentID  = $("#product_ID :selected").val();
+            alert(parentID);
+        }
+        
+        if (value != "") {
                 $.ajax({
                     type: "GET",
                     contentType: "application/json; charset=utf-8",
                     url: '@Url.Action("AddValue", "Home")',
-                    data: { "type": 0, "Value": product },
+                    data: { "type": inputID, "value": value, "parentID": parentID },
                     dataType: "json",
                     beforeSend: function () {
                       //  alert(product);
                     },
                     success: function (data) {
-                        RefreshListBox(data, inputId);
+                        RefreshListBox(data, inputID);
                     },
                     error: function (result) {
                         alert('Service call failed: ' + result.status + ' Type :' + result.statusText);
@@ -119,7 +126,6 @@
         });
         // Fill Component Dropdown list
         $('#' + inputID + "_ID").html(items);
-
     }
 
 </script>
@@ -147,8 +153,8 @@
                 <p>
                     @Html.LabelFor(m => m.component)
                     <br />
-                    <input type="text" placeholder="new product" id="component">
-                    <input type="button" value="Add Component" dataInputId="component" onclick="AddValue()">
+                    <input type="text" placeholder="new component" id="component">
+                    <input type="button" value="Add Component" dataInputId="component" onclick="AddValue()" >
                     <br />    
                     @Html.ListBoxFor(m => m.component.ID, new SelectList(ViewBag.Component, "ID", "Name", ViewBag.SelComponent), new { style = "width:310px" })
                     @Html.ValidationMessageFor(m => m.component.ID)
@@ -157,6 +163,9 @@
             <li>
                 <p>
                     @Html.LabelFor(m => m.cause)
+                    <br />
+                    <input type="text" placeholder="new area" id="area">
+                    <input type="button" value="Add Area" dataInputId="area" onclick="AddValue()">
                     <br>
                     @Html.ListBoxFor(m => m.cause.ID, new SelectList(ViewBag.Cause, "ID", "Name", ViewBag.SelCause), new { style = "width:310px" })
                     @Html.ValidationMessageFor(m => m.cause.ID)
@@ -164,7 +173,7 @@
             </li>
 
         </ol>
-        <input type="submit" value="Submit" />
+        @*<input type="submit" value="Submit" />*@
     </fieldset>
 }
 
