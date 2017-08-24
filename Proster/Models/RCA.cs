@@ -19,8 +19,8 @@ namespace Proster.Models
         public Product product { get; set; }
         [Display(Name = "Component")]
         public Component component { get; set; }
-        [Display(Name = "Cause")]
-        public Area cause { get; set; }
+        [Display(Name = "Area")]
+        public Area area { get; set; }
 
     }
 
@@ -61,7 +61,7 @@ namespace Proster.Models
 
     public class Area
     {
-        [MustBeSelectedAttribute(ErrorMessage = "Please Select Cause")]
+        [MustBeSelectedAttribute(ErrorMessage = "Please Select Area")]
         public int? ID { get; set; }
         public string Name { get; set; }
         public int? ParentComponent { get; set; }

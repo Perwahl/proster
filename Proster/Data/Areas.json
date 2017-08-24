@@ -1,1 +1,1 @@
-[{"ID":1,"Name":"test1","ParentProduct":null},{"ID":2,"Name":"testComp1","ParentProduct":1},{"ID":3,"Name":"testComp2","ParentProduct":1}]
+[{"ID":1,"Name":"test1","ParentComponent":null},{"ID":2,"Name":"testComp1","ParentComponent":null},{"ID":3,"Name":"testComp2","ParentComponent":null},{"ID":4,"Name":"test1","ParentComponent":0},{"ID":5,"Name":"test2","ParentComponent":3}]

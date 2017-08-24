@@ -57,7 +57,7 @@
                 $.ajax({
                     type: "GET",
                     contentType: "application/json; charset=utf-8",
-                    url: '@Url.Action("CauseList", "Home")',
+                    url: '@Url.Action("AreaList", "Home")',
                     data: { "mComponent": id },
                     dataType: "json",
                     beforeSend: function () {
@@ -69,7 +69,7 @@
                             items += "<option value='" + cause.Value + "'>" + cause.Text + "</option>";
                         });
                         // Fill Component Dropdown list
-                        $('#cause_ID').html(items);
+                        $('#area_ID').html(items);
                     },
                     error: function (result) {
                         alert('Service call failed: ' + result.status + ' Type :' + result.statusText);
@@ -78,7 +78,7 @@
             }
             else {
                 var items = '<option value="">Select</option>';
-                $('#cause_ID').html(items);
+                $('#area_ID').html(items);
             }
         });
     });
@@ -90,10 +90,13 @@
         var value = document.getElementById(inputID).value;
         var parentID = "0";
 
-        if (inputID == "component") {
-            
+        if (inputID == "component") {            
             parentID  = $("#product_ID :selected").val();
-            alert(parentID);
+            //   alert(parentID);        
+        }
+        else if (inputID == "area") {
+            parentID = $("#component_ID :selected").val();
+          //  alert(parentID);
         }
         
         if (value != "") {
@@ -162,13 +165,13 @@
             </li>
             <li>
                 <p>
-                    @Html.LabelFor(m => m.cause)
+                    @Html.LabelFor(m => m.area)
                     <br />
                     <input type="text" placeholder="new area" id="area">
                     <input type="button" value="Add Area" dataInputId="area" onclick="AddValue()">
                     <br>
-                    @Html.ListBoxFor(m => m.cause.ID, new SelectList(ViewBag.Cause, "ID", "Name", ViewBag.SelCause), new { style = "width:310px" })
-                    @Html.ValidationMessageFor(m => m.cause.ID)
+                    @Html.ListBoxFor(m => m.area.ID, new SelectList(ViewBag.Cause, "ID", "Name", ViewBag.SelCause), new { style = "width:310px" })
+                    @Html.ValidationMessageFor(m => m.area.ID)
                 </p>
             </li>
 
